@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <main class="login-card">
+        <header>
+            <h1>My Profile</h1>
+        </header>
+
+        <section id="profile-data">
+            <p><strong>Username:</strong> <span id="p-username">Loading...</span></p>
+            <p><strong>Email:</strong> <span id="p-email">Loading...</span></p>
+            <p><strong>User ID:</strong> <span id="p-id">Loading...</span></p>
+        </section>
+
+        <footer>
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </footer>
+    </main>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+        
+        async function loadProfile() {
+            const id = localStorage.getItem('userId');
+            if (!id) { window.location.href = "login.html"; return; }
+
+            try {
+                // Using your existing backend route: /getuserbyid?user_id=...
+                const res = await fetch(`${API_URL}/getuserbyid?user_id=${id}`);
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById('p-username').innerText = data.username;
+                    document.getElementById('p-email').innerText = data.email || 'Not provided';
+                    document.getElementById('p-id').innerText = data.id;
+                }
+            } catch (e) { console.error("Profile load failed"); }
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

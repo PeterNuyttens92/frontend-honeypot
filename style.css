@@ -100,3 +100,21 @@ footer a {
     text-decoration: none;
     font-size: 0.85rem;
 }
+/* Dashboard Navigation Container */
+.dash-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Specific styling for the Logout button */
+.btn-secondary {
+    background-color: #64748b !important;
+}
+
+/* Ensure links acting as buttons look consistent */
+.dash-nav a.login-btn {
+    text-decoration: none;
+    text-align: center;
+    display: block; /* Ensures it takes up the full width like a button */
+}
