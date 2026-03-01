@@ -25,6 +25,14 @@ async function handleAuth(endpoint, payload) {
         window.location.href = "dashboard.html"; 
     }, 800);
 }
+    if (endpoint === "register") {
+            // 1. Show the specific success message
+            msg.innerText = "Account created successfully! Redirecting to login...";
+            msg.className = "success";
+            setTimeout(() => {
+            window.location.href = "login.html";
+        }, 2000);
+    }
     } catch (e) { msg.innerText = "Server Unreachable"; }
 }
 
