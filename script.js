@@ -1,56 +1,43 @@
 const API_URL = "http://127.0.0.1:8000";
 
-async function checkConnection() {
-    try {
-        const response = await fetch(`${API_URL}/`);
-        const data = await response.json();
-        const statusEl = document.getElementById('status');
-        if (statusEl) {
-            statusEl.innerText = "Status: Online";
-            statusEl.style.color = "green";
-        }
-    } catch (error) {
-        const statusEl = document.getElementById('status');
-        if (statusEl) {
-            statusEl.innerText = "Status: Backend Offline";
-            statusEl.style.color = "red";
-        }
-    }
-}
-
-// Reuseable function for Auth (Login or Register)
+// Unified Auth Function
 async function handleAuth(endpoint, payload) {
-    const messageDisplay = document.getElementById('message');
-    
+    const msg = document.getElementById('message');
     try {
-        const response = await fetch(`${API_URL}/${endpoint}`, {
+        const res = await fetch(`${API_URL}/${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            messageDisplay.innerText = `Success! User: ${data.username}`;
-            messageDisplay.className = "success";
-        } else {
-            messageDisplay.innerText = "Error: " + (data.detail || "Action failed");
-            messageDisplay.className = "error";
-        }
-    } catch (err) {
-        messageDisplay.innerText = "Error: Could not reach the server.";
-        messageDisplay.className = "error";
-    }
+        const data = await res.json();
+        msg.innerText = res.ok ? `Success! Welcome ${data.username}` : `Error: ${data.detail}`;
+        msg.className = res.ok ? "success" : "error";
+        if (res.ok && endpoint === "register") setTimeout(() => window.location.href = "login.html", 1500);
+    } catch (e) { msg.innerText = "Server Unreachable"; }
 }
 
-// Login Event
-document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+// Global Listener for both Login and Register
+document.addEventListener('submit', (e) => {
     e.preventDefault();
-    handleAuth("login", {
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value
-    });
+    const isReg = e.target.id === 'registerForm';
+    if (e.target.id === 'loginForm' || isReg) {
+        const payload = {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        };
+        if (isReg) payload.email = document.getElementById('email').value || null;
+        
+        handleAuth(isReg ? "register" : "login", payload);
+    }
 });
 
-checkConnection();
+// Simple Status Check
+(async () => {
+    const status = document.getElementById('status');
+    if (!status) return;
+    try {
+        const res = await fetch(`${API_URL}/`);
+        status.innerText = res.ok ? "Status: Online" : "Status: Error";
+        status.style.color = res.ok ? "green" : "red";
+    } catch (e) { status.innerText = "Status: Offline"; status.style.color = "red"; }
+})();
