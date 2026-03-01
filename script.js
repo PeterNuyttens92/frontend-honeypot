@@ -44,3 +44,11 @@ function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const name = localStorage.getItem('username');
+    const welcomeElement = document.getElementById('welcome-msg');
+    
+    if (welcomeElement) {
+        welcomeElement.innerHTML = `Welcome, ${name}!`;
+    }
+});
