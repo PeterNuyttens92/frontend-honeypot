@@ -1,9 +1,7 @@
-const API_URL = "http://127.0.0.1:8000";
-
 async function handleAuth(endpoint, payload) {
     const msg = document.getElementById('message');
     try {
-        const res = await fetch(`${API_URL}/${endpoint}`, {
+        const res = await fetch(`/${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -19,10 +17,10 @@ async function handleAuth(endpoint, payload) {
     if (endpoint === "login") {
     localStorage.setItem('userId', data.id);
     localStorage.setItem('username', data.username);
-    
+
     // No leading slash means "relative to current folder"
-    setTimeout(() => { 
-        window.location.href = "dashboard.html"; 
+    setTimeout(() => {
+        window.location.href = "dashboard.html";
     }, 800);
 }
     if (endpoint === "register") {
@@ -55,7 +53,7 @@ function logout() {
 document.addEventListener("DOMContentLoaded", () => {
     const name = localStorage.getItem('username');
     const welcomeElement = document.getElementById('welcome-msg');
-    
+
     if (welcomeElement) {
         welcomeElement.innerHTML = `Welcome, ${name}!`;
     }

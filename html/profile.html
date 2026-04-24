@@ -23,15 +23,13 @@
     </main>
 
     <script>
-        const API_URL = "http://127.0.0.1:8000";
-        
         async function loadProfile() {
             const id = localStorage.getItem('userId');
             if (!id) { window.location.href = "login.html"; return; }
 
             try {
                 // Using your existing backend route: /getuserbyid?user_id=...
-                const res = await fetch(`${API_URL}/getuserbyid?user_id=${id}`);
+                const res = await fetch(`/getuserbyid?user_id=${id}`);
                 const data = await res.json();
 
                 if (res.ok) {
